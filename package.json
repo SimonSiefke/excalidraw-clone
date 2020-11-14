@@ -1,0 +1,17 @@
+{
+  "name": "excalidraw-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec \"esbuild --sourcemap --bundle src/rendererWorkerMain.ts --outdir=\"dist\"\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.8.7",
+    "nodemon": "^2.0.6",
+    "typescript": "^4.0.5"
+  }
+}
