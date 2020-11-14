@@ -7,10 +7,35 @@ body {
   margin: 0;
   display: grid;
   grid-template-columns: 150px 1fr;
+  grid-template-rows: 50px 1fr;
+  grid-template-areas:
+    "SideBar TopBar"
+    "SideBar Canvas";
 }
 
 #SideBar {
   background: lightgray;
+  grid-area: SideBar;
+}
+
+#TopBar {
+  grid-area: TopBar;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  user-select: none;
+}
+
+#TopBar label {
+  contain: strict;
+  position: relative;
+}
+
+#TopBar input {
+  display: none;
+}
+
+.ModeInput:checked + label {
+  background-color: #bbb;
 }
 
 #Canvas {
@@ -19,21 +44,26 @@ body {
   position: relative;
   contain: strict;
   user-select: none;
+  grid-area: Canvas;
 }
 
 #Canvas * {
   position: absolute;
 }
 
-[data-object-type='rectangle'] {
-  width: 50px;
-  height: 50px;
+#Canvas[data-cursor-mode="crosshair"] {
+  cursor: crosshair;
+}
+
+[data-object-type="rectangle"] {
   border: 1px solid;
 }
 
-[data-object-type='circle'] {
-  width: 50px;
-  height: 50px;
+[data-object-type="ellipsis"] {
   border: 1px solid;
   border-radius: 50%;
+}
+
+[data-shape="diamond"] {
+  border: 1px solid;
 }

@@ -10,11 +10,23 @@
     <div id="SideBar">
       <input id="ColorPicker" type="color" />
     </div>
-    <div id="Canvas">
-      <div data-object-type="rectangle" data-object-id="1"></div>
-      <div data-object-type="rectangle" data-object-id="2"></div>
-      <div data-object-type="circle" data-object-id="3"></div>
+    <div id="TopBar">
+      <input type="radio" class="ModeInput" name="Mode" id="ModeMouse" value="mouse" />
+      <label for="ModeMouse">mouse</label>
+
+      <input type="radio" class="ModeInput" name="Mode" value="rectangle" id="ModeRectangle" />
+      <label for="ModeRectangle">rectangle</label>
+
+      <input type="radio" class="ModeInput" name="Mode" value="diamond" id="ModeDiamond" />
+      <label for="ModeDiamond">diamond</label>
+
+      <input type="radio" class="ModeInput" name="Mode" value="ellipsis" id="ModeEllipsis" />
+      <label for="ModeEllipsis">ellipsis</label>
+
+      <input type="radio" class="ModeInput" name="Mode" value="arrow" id="ModeArrow" />
+      <label title="ModeArrow">arrow</label>
     </div>
+    <div id="Canvas"></div>
     <script type="module" src="index.js"></script>
   </body>
 </html>

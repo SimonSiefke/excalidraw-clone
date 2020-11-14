@@ -12,6 +12,46 @@ const commandBackgroundChange = (command) => {
   $Object.style.background = command.background
 }
 
+const commandCursorModeChange = (command) => {
+  $Canvas.dataset.cursorMode = command.cursorMode
+}
+
+const createShapeRectangle = (rectangle) => {
+  const $Rectangle = document.createElement('div')
+  $Rectangle.dataset.objectType = 'rectangle'
+  $Rectangle.style.transform = `translate(${rectangle.x}px, ${rectangle.y}px)`
+  $Rectangle.style.width = rectangle.width + 'px'
+  $Rectangle.style.height = rectangle.height + 'px'
+  return $Rectangle
+}
+
+const createShapeEllipsis = (ellipsis) => {
+  const $Ellipsis = document.createElement('div')
+  $Ellipsis.dataset.objectType = 'ellipsis'
+  $Ellipsis.style.transform = `translate(${ellipsis.x}px, ${ellipsis.y}px)`
+  return $Ellipsis
+}
+
+const createShapeDiamond = (diamond) => {
+  const $Diamond = document.createElement('div')
+  $Diamond.dataset.objectType = 'diamond'
+  $Diamond.style.transform = `translate(${diamond.x}px, ${diamond.y}px)`
+  return $Diamond
+}
+
+const renderers = Object.create(null)
+
+renderers['rectangle'] = createShapeRectangle
+renderers['ellipsis'] = createShapeEllipsis
+renderers['diamond'] = createShapeDiamond
+
+const commandCreateShape = (command) => {
+  const $Shape = renderers[command.shape.type](command.shape)
+  $Shape.dataset.objectId = command.id
+  objects[command.id] = $Shape
+  $Canvas.append($Shape)
+}
+
 const handleMessage = ({ data }) => {
   switch (data.command) {
     case 'move':
@@ -20,8 +60,14 @@ const handleMessage = ({ data }) => {
     case 'backgroundChange':
       commandBackgroundChange(data)
       break
+    case 'cursorModeChange':
+      commandCursorModeChange(data)
+      break
+    case 'createShape':
+      commandCreateShape(data)
+      break
     default:
-      throw new Error('unknown command')
+      throw new Error(`unknown command ${data.command}`)
   }
 }
 
@@ -34,10 +80,6 @@ const sendWorker = (messages) => worker.postMessage(messages)
 const $Canvas = document.getElementById('Canvas')
 
 const objects = Object.create(null)
-
-objects[1] = document.querySelector('[data-object-id="1"]')
-objects[2] = document.querySelector('[data-object-id="2"]')
-objects[3] = document.querySelector('[data-object-id="3"]')
 
 const handlePointerMove = ({ clientX: x, clientY: y, target }) => {
   sendWorker({
@@ -56,10 +98,8 @@ const canvasHandlePointerUp = () => sendWorker({ event: 'pointerUp' })
 window.addEventListener('pointerup', canvasHandlePointerUp)
 
 const canvasHandlePointerDown = ({ clientX: x, clientY: y, target }) => {
+  console.log(target)
   const id = target.dataset.objectId
-  if (!id) {
-    return
-  }
   sendWorker({
     event: 'pointerDown',
     x,
@@ -68,7 +108,7 @@ const canvasHandlePointerDown = ({ clientX: x, clientY: y, target }) => {
   })
 }
 
-window.addEventListener('pointerdown', canvasHandlePointerDown)
+$Canvas.addEventListener('pointerdown', canvasHandlePointerDown)
 
 // Color Picker
 
@@ -78,3 +118,20 @@ const colorPickerHandleChange = (event) =>
   sendWorker({ event: 'colorChange', value: event.target.value })
 
 $ColorPicker.oninput = colorPickerHandleChange
+
+// TopBar
+
+const $TopBar = document.getElementById('TopBar')
+
+const topBarHandleClick = (event) => {
+  const $Target = event.target
+  if ($Target === $TopBar) {
+    return
+  }
+  sendWorker({
+    event: 'toolBarClick',
+    value: event.target.value,
+  })
+}
+
+$TopBar.addEventListener('click', topBarHandleClick)

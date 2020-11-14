@@ -21,8 +21,14 @@ export interface EventColorChange {
   readonly id: string
 }
 
+export interface EventToolBarClick {
+  readonly event: 'toolBarClick'
+  readonly value: 'mouse' | 'rectangle' | 'diamond' | 'ellipsis' | 'arrow'
+}
+
 export type Event =
   | EventPointerMove
   | EventPointerDown
   | EventPointerUp
   | EventColorChange
+  | EventToolBarClick
